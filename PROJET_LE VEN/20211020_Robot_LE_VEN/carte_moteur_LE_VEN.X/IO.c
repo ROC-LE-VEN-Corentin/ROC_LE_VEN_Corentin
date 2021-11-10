@@ -31,6 +31,8 @@ void InitIO()
     _TRISG7 = 0; // LED Bleue
     _TRISB14 = 0; // Commande moteur gauche
     _TRISB15 = 0; // Commande moteur gauche
+    _TRISC6 = 0; // Commande moteur droit
+    _TRISC7 = 0; // Commande moteur droit
     // Moteurs 
     //********** Configuration des entrées : _TRISxx = 1 ********************************   
 }

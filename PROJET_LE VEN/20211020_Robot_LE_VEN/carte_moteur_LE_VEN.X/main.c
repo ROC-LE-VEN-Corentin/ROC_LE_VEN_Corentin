@@ -19,8 +19,9 @@ InitTimer1();
 /****************************************************************************************************/
 InitIO();
 InitPWM();
-PWMSetSpeed(0);
-
+PWMSetSpeed(0,MOTEUR_DROIT);
+PWMSetSpeed(0,MOTEUR_GAUCHE);
+_T3Interrupt();
 LED_BLANCHE = 1;
 LED_BLEUE = 1;
 LED_ORANGE = 1;
