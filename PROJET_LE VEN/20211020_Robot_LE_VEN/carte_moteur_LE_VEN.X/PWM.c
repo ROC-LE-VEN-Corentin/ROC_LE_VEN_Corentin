@@ -4,9 +4,10 @@
 #include "PWM.h"
 #include "Robot.h"
 #include "ToolBox.h"
+#include "timer.h"
 
 #define PWMPER 40.0
-unsigned char acceleration = 20;
+unsigned char acceleration = 5;
 
 void InitPWM(void)
 {
@@ -68,7 +69,7 @@ PTCONbits.PTEN = 1;
     
     }*/
     
-void PWMUpdateSpeed()
+void PWMUpdateSpeed(void)
 {
 // Cette fonction est appelée sur timer et permet de suivre des rampes d?accélération
     if (robotState.vitesseDroiteCommandeCourante < robotState.vitesseDroiteConsigne)
@@ -117,3 +118,15 @@ MOTEUR_GAUCHE_L_PWM_ENABLE = 1; //Pilotage de la pin en mode PWM
 MOTEUR_GAUCHE_DUTY_CYCLE = Abs(robotState.vitesseGaucheCommandeCourante) * PWMPER;
 }
 
+void PWMSetSpeedConsigne(float vitesseEnPourcents, unsigned char nbMoteur)
+{
+        if (nbMoteur == MOTEUR_GAUCHE)
+        {
+           robotState.vitesseGaucheConsigne = vitesseEnPourcents;
+        }
+        else if (nbMoteur == MOTEUR_DROIT)
+        {
+           robotState.vitesseDroiteConsigne = vitesseEnPourcents;
+        }
+
+}
