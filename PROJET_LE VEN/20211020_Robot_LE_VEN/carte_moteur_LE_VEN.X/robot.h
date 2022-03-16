@@ -12,6 +12,8 @@ float vitesseDroiteCommandeCourante;
 float distanceTelemetreDroit;
 float distanceTelemetreCentre;
 float distanceTelemetreGauche;
+float distanceTelemetreExtremeGauche;
+float distanceTelemetreExtremeDroit;
 }
 ;}
 ;} ROBOT_STATE_BITS;
