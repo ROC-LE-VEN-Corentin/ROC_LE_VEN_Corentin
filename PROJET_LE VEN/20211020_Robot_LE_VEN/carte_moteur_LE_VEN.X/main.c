@@ -48,17 +48,17 @@ int main(void) {
             robotState.distanceTelemetreDroit = 34 / volts - 5;
             volts = ((float) result[2])*3.3 / 4096 * 3.2;
             robotState.distanceTelemetreCentre = 34 / volts - 5;
-            volts = ((float) result[3])*3.3 / 4096 * 3.2;
+            volts = ((float) result[4])*3.3 / 4096 * 3.2;
             robotState.distanceTelemetreGauche = 34 / volts - 5;
             /***************************************************/
             volts = ((float) result[0])*3.3 / 4096 * 3.2;//Capteurs en plus
             robotState.distanceTelemetreExtremeDroit = 34 / volts - 5;
-            volts = ((float) result[4])*3.3 / 4096 * 3.2;
+            volts = ((float) result[3])*3.3 / 4096 * 3.2;
             robotState.distanceTelemetreExtremeGauche = 34 / volts - 5;
             /**************************************************/
             
-            robotState.distanceTelemetreGauche = 34 / volts - 5;
-            if (robotState.distanceTelemetreGauche< 30) {
+            
+            if (robotState.distanceTelemetreGauche < 30 || robotState.distanceTelemetreExtremeGauche < 30) {
                 LED_BLANCHE = 1;
             } else {
                 LED_BLANCHE = 0;
@@ -68,24 +68,24 @@ int main(void) {
             } else {
                 LED_BLEUE = 0;
             }
-            if (robotState.distanceTelemetreDroit < 30) {
+            if (robotState.distanceTelemetreDroit < 30 || robotState.distanceTelemetreExtremeDroit < 30) {
 
                 LED_ORANGE = 1;
             } else {
                 LED_ORANGE = 0;
             }
-            /*if (robotState.distanceTelemetreExtremeDroit < 30) {
-
-                LED_ORANGE = !LED_ORANGE;
-            } else {
-                LED_ORANGE = 0;
-            }
-            if (robotState.distanceTelemetreExtremeGauche < 30) {
-
-                LED_BLANCHE = !LED_BLANCHE;
-            } else {
-                LED_BLANCHE = 0;
-            }*/
+//            if (robotState.distanceTelemetreExtremeDroit < 30) {
+//
+//                LED_ORANGE = 1;
+//            } else {
+//                LED_ORANGE = 0;
+//            }
+//            if (robotState.distanceTelemetreExtremeGauche < 30) {
+//
+//                LED_BLANCHE = 1;
+//            } else {
+//                LED_BLANCHE = 0;
+//            }
         }
 
     }
@@ -159,8 +159,11 @@ void OperatingSystemLoop(void) {
 
 unsigned char nextStateRobot = 0;
 
+
+volatile unsigned char DetectionObstacle;
+
 void SetNextRobotStateInAutomaticMode() {
-    unsigned char positionObstacle = PAS_D_OBSTACLE;
+    /*unsigned char positionObstacle = PAS_D_OBSTACLE;
 
     //Détermination de la position des obstacles en fonction des télémètres
     if (robotState.distanceTelemetreDroit < 30 &&
@@ -177,7 +180,7 @@ void SetNextRobotStateInAutomaticMode() {
             robotState.distanceTelemetreCentre > 20 &&
             robotState.distanceTelemetreGauche > 30) //pas d?obstacle
         positionObstacle = PAS_D_OBSTACLE;
-
+    
     //Détermination de l?état à venir du robot
     if (positionObstacle == PAS_D_OBSTACLE)
         nextStateRobot = STATE_AVANCE;
@@ -190,5 +193,124 @@ void SetNextRobotStateInAutomaticMode() {
 
     //Si l?on n?est pas dans la transition de l?étape en cours
     if (nextStateRobot != stateRobot - 1)
+        stateRobot = nextStateRobot;*/
+    
+    //Détermination de la position des obstacles en fonction des télémètres avec MODIFS
+    
+    DetectionObstacle = 0b00000; //modif
+    if (robotState.distanceTelemetreExtremeGauche < 20)
+        DetectionObstacle = DetectionObstacle | (0b00001 << 4);
+    if (robotState.distanceTelemetreGauche < 20)
+        DetectionObstacle = DetectionObstacle | (0b00001 << 3);
+    if (robotState.distanceTelemetreCentre < 20)
+        DetectionObstacle = DetectionObstacle | (0b00001 << 2);
+    if (robotState.distanceTelemetreDroit < 20)
+        DetectionObstacle = DetectionObstacle | (0b00001 << 1);
+    if (robotState.distanceTelemetreExtremeDroit < 20)
+        DetectionObstacle = DetectionObstacle | (0b00001 << 0);
+    
+    switch (DetectionObstacle)
+    {
+        case 0b00000:
+            nextStateRobot = STATE_AVANCE;
+            break;
+        case 0b00001:
+            nextStateRobot = STATE_AVANCE;
+            break;
+        case 0b00010:
+            nextStateRobot = STATE_TOURNE_GAUCHE;
+            break;
+        case 0b00011:
+            nextStateRobot = STATE_TOURNE_GAUCHE;
+            break;
+        case 0b00100:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;
+        case 0b00101:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;        
+        case 0b00110:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;
+        case 0b00111:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;        
+        case 0b01000:
+            nextStateRobot = STATE_TOURNE_DROITE;
+            break;
+        case 0b01001:
+            nextStateRobot = STATE_TOURNE_DROITE;
+            break;        
+        case 0b01010:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;
+        case 0b01011:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;
+        case 0b01100:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b01101:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b01110:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b01111:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;
+        case 0b10000:
+            nextStateRobot = STATE_AVANCE;
+            break;
+        case 0b10001:
+            nextStateRobot = STATE_AVANCE;
+            break;
+        case 0b10010:
+            nextStateRobot = STATE_TOURNE_GAUCHE;
+            break;
+        case 0b10011:
+            nextStateRobot = STATE_TOURNE_GAUCHE;
+            break;
+        case 0b10100:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b10101:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;        
+        case 0b10110:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b10111:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
+            break;        
+        case 0b11000:
+            nextStateRobot = STATE_TOURNE_DROITE;
+            break;
+        case 0b11001:
+            nextStateRobot = STATE_TOURNE_DROITE;
+            break;        
+        case 0b11010:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b11011:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b11100:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b11101:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b11110:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+        case 0b11111:
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            break;
+       
+    }
+    if (nextStateRobot != stateRobot - 1)
         stateRobot = nextStateRobot;
+
+    
 }
