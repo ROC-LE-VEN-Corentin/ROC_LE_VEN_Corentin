@@ -114,22 +114,49 @@ void OperatingSystemLoop(void) {
         case STATE_AVANCE_EN_COURS:
             SetNextRobotStateInAutomaticMode();
             break;
+            
+        case STATE_COULOIR://modif
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            stateRobot = STATE_COULOIR_EN_COURS;
+            break;
+        case STATE_COULOIR_EN_COURS://modif
+            SetNextRobotStateInAutomaticMode();
+            break;
 
         case STATE_TOURNE_GAUCHE:
-            PWMSetSpeedConsigne(30, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
             PWMSetSpeedConsigne(0, MOTEUR_GAUCHE);
             stateRobot = STATE_TOURNE_GAUCHE_EN_COURS;
             break;
         case STATE_TOURNE_GAUCHE_EN_COURS:
             SetNextRobotStateInAutomaticMode();
             break;
+            
+        case STATE_TOURNE_GAUCHE_UNPEU://modif
+            PWMSetSpeedConsigne(20, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(10, MOTEUR_GAUCHE);
+            stateRobot = STATE_TOURNE_GAUCHE_UNPEU_EN_COURS;
+            break;
+        case STATE_TOURNE_GAUCHE_UNPEU_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
 
         case STATE_TOURNE_DROITE:
             PWMSetSpeedConsigne(0, MOTEUR_DROIT);
-            PWMSetSpeedConsigne(30, MOTEUR_GAUCHE);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
             stateRobot = STATE_TOURNE_DROITE_EN_COURS;
             break;
         case STATE_TOURNE_DROITE_EN_COURS:
+            SetNextRobotStateInAutomaticMode();
+            break;
+            
+        case STATE_TOURNE_DROITE_UNPEU://modif
+            PWMSetSpeedConsigne(10, MOTEUR_DROIT);
+            PWMSetSpeedConsigne(20, MOTEUR_GAUCHE);
+            stateRobot = STATE_TOURNE_DROITE_UNPEU_EN_COURS;
+            break;
+        case STATE_TOURNE_DROITE_UNPEU_EN_COURS:
             SetNextRobotStateInAutomaticMode();
             break;
 
@@ -198,15 +225,15 @@ void SetNextRobotStateInAutomaticMode() {
     //Détermination de la position des obstacles en fonction des télémètres avec MODIFS
     
     DetectionObstacle = 0b00000; //modif
-    if (robotState.distanceTelemetreExtremeGauche < 20)
+    if (robotState.distanceTelemetreExtremeGauche < 30)
         DetectionObstacle = DetectionObstacle | (0b00001 << 4);
-    if (robotState.distanceTelemetreGauche < 20)
+    if (robotState.distanceTelemetreGauche < 30)
         DetectionObstacle = DetectionObstacle | (0b00001 << 3);
-    if (robotState.distanceTelemetreCentre < 20)
+    if (robotState.distanceTelemetreCentre < 30)
         DetectionObstacle = DetectionObstacle | (0b00001 << 2);
-    if (robotState.distanceTelemetreDroit < 20)
+    if (robotState.distanceTelemetreDroit < 30)
         DetectionObstacle = DetectionObstacle | (0b00001 << 1);
-    if (robotState.distanceTelemetreExtremeDroit < 20)
+    if (robotState.distanceTelemetreExtremeDroit < 30)
         DetectionObstacle = DetectionObstacle | (0b00001 << 0);
     
     switch (DetectionObstacle)
@@ -215,7 +242,7 @@ void SetNextRobotStateInAutomaticMode() {
             nextStateRobot = STATE_AVANCE;
             break;
         case 0b00001:
-            nextStateRobot = STATE_AVANCE;
+            nextStateRobot = STATE_TOURNE_GAUCHE_UNPEU;//modif
             break;
         case 0b00010:
             nextStateRobot = STATE_TOURNE_GAUCHE;
@@ -239,7 +266,7 @@ void SetNextRobotStateInAutomaticMode() {
             nextStateRobot = STATE_TOURNE_DROITE;
             break;
         case 0b01001:
-            nextStateRobot = STATE_TOURNE_DROITE;
+            nextStateRobot = STATE_TOURNE_DROITE;//modif
             break;        
         case 0b01010:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
@@ -260,10 +287,10 @@ void SetNextRobotStateInAutomaticMode() {
             nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
             break;
         case 0b10000:
-            nextStateRobot = STATE_AVANCE;
+            nextStateRobot = STATE_TOURNE_DROITE_UNPEU;//modif
             break;
         case 0b10001:
-            nextStateRobot = STATE_AVANCE;
+            nextStateRobot = STATE_COULOIR;//modif
             break;
         case 0b10010:
             nextStateRobot = STATE_TOURNE_GAUCHE;
