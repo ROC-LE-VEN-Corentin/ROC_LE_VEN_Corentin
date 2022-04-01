@@ -225,7 +225,7 @@ void SetNextRobotStateInAutomaticMode() {
     //Détermination de la position des obstacles en fonction des télémètres avec MODIFS
     
     DetectionObstacle = 0b00000; //modif
-    if (robotState.distanceTelemetreExtremeGauche < 30)
+    if (robotState.distanceTelemetreExtremeGauche < 15)
         DetectionObstacle = DetectionObstacle | (0b00001 << 4);
     if (robotState.distanceTelemetreGauche < 30)
         DetectionObstacle = DetectionObstacle | (0b00001 << 3);
@@ -233,7 +233,7 @@ void SetNextRobotStateInAutomaticMode() {
         DetectionObstacle = DetectionObstacle | (0b00001 << 2);
     if (robotState.distanceTelemetreDroit < 30)
         DetectionObstacle = DetectionObstacle | (0b00001 << 1);
-    if (robotState.distanceTelemetreExtremeDroit < 30)
+    if (robotState.distanceTelemetreExtremeDroit < 15)
         DetectionObstacle = DetectionObstacle | (0b00001 << 0);
     
     switch (DetectionObstacle)
@@ -266,7 +266,7 @@ void SetNextRobotStateInAutomaticMode() {
             nextStateRobot = STATE_TOURNE_DROITE;
             break;
         case 0b01001:
-            nextStateRobot = STATE_TOURNE_DROITE;//modif
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;//modif
             break;        
         case 0b01010:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
@@ -278,10 +278,10 @@ void SetNextRobotStateInAutomaticMode() {
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
             break;
         case 0b01101:
-            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;//modif
             break;
         case 0b01110:
-            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
             break;
         case 0b01111:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
@@ -293,16 +293,16 @@ void SetNextRobotStateInAutomaticMode() {
             nextStateRobot = STATE_COULOIR;//modif
             break;
         case 0b10010:
-            nextStateRobot = STATE_TOURNE_GAUCHE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;//modif
             break;
         case 0b10011:
-            nextStateRobot = STATE_TOURNE_GAUCHE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
             break;
         case 0b10100:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
             break;
         case 0b10101:
-            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
             break;        
         case 0b10110:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
@@ -314,25 +314,25 @@ void SetNextRobotStateInAutomaticMode() {
             nextStateRobot = STATE_TOURNE_DROITE;
             break;
         case 0b11001:
-            nextStateRobot = STATE_TOURNE_DROITE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;//modif
             break;        
         case 0b11010:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
             break;
         case 0b11011:
-            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
             break;
         case 0b11100:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
             break;
         case 0b11101:
-            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
             break;
         case 0b11110:
             nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
             break;
         case 0b11111:
-            nextStateRobot = STATE_TOURNE_SUR_PLACE_DROITE;
+            nextStateRobot = STATE_TOURNE_SUR_PLACE_GAUCHE;
             break;
        
     }
