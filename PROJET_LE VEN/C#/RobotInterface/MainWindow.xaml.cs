@@ -22,15 +22,18 @@ namespace RobotInterface
     /// </summary>
     public partial class MainWindow : Window
     {
+        Robot robot;
         ReliableSerialPort serialPort1;
-        string receivedText = "";
+        //string receivedText = "";
         DispatcherTimer timerAffichage;
-        Robot robot = new Robot();
+        
         
         
         public MainWindow()
         {
             InitializeComponent();
+
+            robot = new Robot();
 
             serialPort1 = new ReliableSerialPort("COM4", 115200, System.IO.Ports.Parity.None, 8, System.IO.Ports.StopBits.One);
             serialPort1.DataReceived += SerialPort1_DataReceived;
@@ -45,10 +48,15 @@ namespace RobotInterface
         private void TimerAffichage_Tick(object sender, EventArgs e)
         {
             //throw new NotImplementedException();
-            if (robot.receivedText != "")
+            /*if (robot.receivedText != "")
             {
                 TextBoxReception.Text += robot.receivedText; //Oscillo analyseur de bus B1
-                robot.receivedText = "";
+                robot.receivedText = "";            
+            }*/
+            while (robot.byteListReceived.Count > 0)//A MODIFIER
+            {
+                TextBoxReception.Text += robot.byteListReceived.ToString();
+                robot.byteListReceived.Dequeue();
             }
         }
 
@@ -56,6 +64,10 @@ namespace RobotInterface
         {
             //throw new NotImplementedException();
             robot.receivedText += Encoding.UTF8.GetString(e.Data, 0, e.Data.Length);
+            foreach (byte value in e.Data)
+            {
+                robot.byteListReceived.Enqueue(value);
+            }
         }
 
         void SendMessage()
@@ -97,6 +109,18 @@ namespace RobotInterface
                 ButtonClear.Background = Brushes.RoyalBlue;
             }
             TextBoxReception.Clear();
+        }
+
+        private void ButtonTest_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] byteList = new byte [20];
+            int i = 0;
+            while(i<20)
+            {
+                byteList[i] = (byte)(2 * i);
+                i++;
+            }
+            serialPort1.Write(byteList,0,byteList.Length);//Pas exploitable car 32 premiers éléments table ASCII + éléments de contrôle
         }
     }
 }
