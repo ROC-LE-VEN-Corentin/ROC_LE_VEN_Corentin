@@ -8,6 +8,8 @@
 #include "ADC.h"
 #include "robot.h"
 #include "main.h"
+#include "UART.h"
+#include "CB_TX1.h"
 
 int main(void) {
     /***************************************************************************************************/
@@ -31,6 +33,9 @@ int main(void) {
     InitPWM();
     // Initialisation du convertisseur
     InitADC1();
+    
+    // Initialisation UART
+    InitUART();
 
     LED_BLANCHE = 0;
     LED_BLEUE = 0;
@@ -40,6 +45,9 @@ int main(void) {
     // Boucle Principale
     /****************************************************************************************************/
     while (1) {
+        
+        //SendMessageDirect((unsigned char*)"Bonjour",7);
+        //__delay32(40000000);
 
         if (ADCIsConversionFinished() == 1) {
             unsigned int * result = ADCGetResult();

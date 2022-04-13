@@ -55,8 +55,7 @@ namespace RobotInterface
             }*/
             while (robot.byteListReceived.Count > 0)//A MODIFIER
             {
-                TextBoxReception.Text += robot.byteListReceived.ToString();
-                robot.byteListReceived.Dequeue();
+                TextBoxReception.Text += "0x"+robot.byteListReceived.Dequeue().ToString("X2")+" ";
             }
         }
 
