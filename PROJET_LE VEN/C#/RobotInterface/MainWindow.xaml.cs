@@ -53,7 +53,7 @@ namespace RobotInterface
                 TextBoxReception.Text += robot.receivedText; //Oscillo analyseur de bus B1
                 robot.receivedText = "";            
             }*/
-            while (robot.byteListReceived.Count > 0)//A MODIFIER
+            while (robot.byteListReceived.Count > 0)
             {
                 TextBoxReception.Text += "0x"+robot.byteListReceived.Dequeue().ToString("X2")+" ";
             }
@@ -119,7 +119,7 @@ namespace RobotInterface
                 byteList[i] = (byte)(2 * i);
                 i++;
             }
-            serialPort1.Write(byteList,0,byteList.Length);//Pas exploitable car 32 premiers éléments table ASCII + éléments de contrôle
+            serialPort1.Write(byteList,0,byteList.Length);//Pas exploitable car 32 premiers éléments table ASCII = éléments de contrôle
         }
     }
 }

@@ -35,7 +35,7 @@ void InitIO()
     _TRISC7 = 0; // Commande moteur droit
     // Moteurs 
     //********** Configuration des entrées : _TRISxx = 1 ********************************   
-    _U1RXR = 0b00000; //Remappe la RP sur l'entrée Rx1
+    _U1RXR = 24; //Remappe la RP sur l'entrée Rx1
     _RP36R = 0b00001; //Remappe la sortie Tx1 vers RP
 }
 
